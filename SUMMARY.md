@@ -18,5 +18,5 @@
 * [Dropwizard](dropwizard.md)
   * Configuring a Scheduled Task
 * [Spark](spark.md)
-  * Persisting RDDs to Disk Between Runs
+  * [Persisting RDDs to Disk Between Runs](spark/persisting-rdds-to-disk-between-runs.md)
 

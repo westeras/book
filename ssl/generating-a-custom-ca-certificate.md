@@ -6,11 +6,18 @@ SSL is built on the concept of public/private keys.  At a high level, each serve
 
 I will be generated a Root CA and an Intermediate CA, which is how professional CA authorities work.  The Root CA \(which is self-signed\) is only used to sign the Intermediate CA, which is then used to sign certificates, rather than signing them with the Root CA directly.  This adds an extra layer of protection to prevent a compromise of the Root CA.
 
+Note: This guide assumes the default openssl configuration on a vanilla CentOS machine, so we won't be adding our own.  The only configuration required on our end is to create a couple files that act as a database that keeps track of certificate signatures by the CA.  To create the files, do the following _as root_:
+
+```
+touch /etc/pki/CA/index.txt
+echo 1000 > /etc/pki/CA/serial
+```
+
 Start in a newly created directory, which we'll use as a workspace for generating our keys and certificates.  We'll also create some subdirectories:
 
 ```
 mkdir pki && cd pki
-mkdir private certs 
+mkdir private certs
 ```
 
 First, we'll generate the root private key:
@@ -21,10 +28,10 @@ Adding `-aes256` indicates you'd like to encrypt the key with a password. The `4
 
 Next, we'll generate the root certificate using the private key:
 
-    openssl req \                    # the `req` command is a PKCS#10 certificate request and certificate generating utility
+    openssl rq \                    # the `req` command is a PKCS#10 certificate request and certificate generating utility
     -key private/ca.key.pem \        # specifies the private key we just created
-    -new \                           # indicates to create a new certificate
-    -x509 \                          # indicates we'll be creating a self-signed certificate
+    -new \                           # signals to create a new CSR
+    -x509 \                          # indicates we'll be creating a self-signed certificate rather an a CSR (more below)
     -days 10000 \                    # length of validity for certificate
     -sha256 \                        # specifies the message digest to sign the request with
     -extensions v3_ca \              # indicates our certificate will be a certificate authority (CA)
@@ -63,6 +70,60 @@ Next we'll do the same thing for the Intermediate CA.  The Intermediate CA certi
 First, generate the private key:
 
 `openssl genrsa -aes256 -out private/intermediate.key.pem 4096`
+
+Now we'll generate a certificate signing request \(CSR\).  A CSR encapsulates your private key, and is typically sent to a Certificate Authority to be signed and returned to you as a CA-signed certificate.  We will be generating the CSR and using our Root CA certificate to sign the certificate.
+
+To create the CSR:
+
+`openssl req -new -sha256 -key private/intermediate.key.pem -out csr/intermediate.csr.pem`
+
+Which leads you to another series of prompts similar to when we generated the Root CA certificate \(the password can be left empty\):
+
+```
+$ openssl req -new -sha256 -key private/intermediate.key.pem -out csr/intermediate.csr.pem
+Enter pass phrase for private/intermediate.key.pem:
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [XX]:US
+State or Province Name (full name) []:Texas
+Locality Name (eg, city) [Default City]:Austin
+Organization Name (eg, company) [Default Company Ltd]:
+Organizational Unit Name (eg, section) []:
+Common Name (eg, your name or your server's hostname) []:WestermanIntermediateCA
+Email Address []:
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:
+An optional company name []:
+```
+
+Now we can sign the CSR with our Root CA and generate our Intermediate CA certificate:
+
+```
+sudo openssl ca \                        # ca command is used to sign CSRs
+-extensions v3_ca \                      # indicates this will be a CA certificate
+-days 10000 \                            # lifetime of the certificate
+-notext \                                # specifies to not output the text form of the certificate
+-md sha256 \                             # message digest to use
+-in csr/intermediate.csr.pem  \          # CSR from previous step
+-out certs/intermediate.cert.pem \       # certificate output file
+-keyfile private/ca.key.pem \            # CA private key file
+-cert certs/ca.cert.pem                  # CA certificate file
+```
+
+After following the prompts you should see your new Intermediate CA certificate in the certs directory.  Notice that it is owned by root \(the previous command needs to run as root in order to access the CA database files created at the beginning\).  You'll need to log in as root and chown the file to your user:
+
+```
+sudo -i
+chown <user>:<group> certs/intermediate.cert.pem
+exit
+```
 
 
 
