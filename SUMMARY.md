@@ -16,7 +16,7 @@
 * [Knox](knox.md)
   * [Adding a Custom Service to Knox](knox/adding-a-custom-service-to-knox.md)
 * [Dropwizard](dropwizard.md)
-  * Configuring a Scheduled Task
+  * [Configuring a Scheduled Task](dropwizard/configuring-a-scheduled-task.md)
 * [Spark](spark.md)
   * [Persisting RDDs to Disk Between Runs](spark/persisting-rdds-to-disk-between-runs.md)
 
