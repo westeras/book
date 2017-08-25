@@ -36,91 +36,49 @@ Once you confirm the agent has attached to the process, you should be able to na
 
 This request will return a JSON document like the following \(this output is specifically for the HBase REST Service; your process will display different metrics\):
 
-`{`
-
-`"request":{`
-
 ```
-  "mbean":"\*:\*",
-
-  "type":"search"
+{
+"request":{
+    "mbean":"\*:\*",
+    "type":"search"
+},
+"value":[
+    "jolokia:type=Config",
+    "JMImplementation:type=MBeanServerDelegate",
+    "java.lang:type=Runtime",
+    "Hadoop:name=MetricsSystem,service=HBase,sub=Control",
+    "java.lang:type=Threading",
+    "java.lang:type=OperatingSystem",
+    "Hadoop:name=MetricsSystem,service=HBase,sub=Stats",
+    "java.lang:name=Code Cache,type=MemoryPool",
+    "java.nio:name=direct,type=BufferPool",
+    "java.lang:type=Compilation",
+    "java.lang:name=CodeCacheManager,type=MemoryManager",
+    "java.util.logging:type=Logging",
+    "java.lang:type=ClassLoading",
+    "java.lang:name=Metaspace Manager,type=MemoryManager",
+    "jolokia:type=Discovery",
+    "java.lang:name=Metaspace,type=MemoryPool",
+    "java.lang:name=Par Eden Space,type=MemoryPool",
+    "java.lang:name=ParNew,type=GarbageCollector",
+    "jmx4perl:type=Config",
+    "java.lang:name=ConcurrentMarkSweep,type=GarbageCollector",
+    "Hadoop:name=JvmMetrics,service=HBase",
+    "jolokia:type=ServerHandler",
+    "java.lang:name=Compressed Class Space,type=MemoryPool",
+    "java.lang:type=Memory",
+    "java.nio:name=mapped,type=BufferPool",
+    "java.lang:name=Par Survivor Space,type=MemoryPool",
+    "Hadoop:name=REST,service=HBase",
+    "com.sun.management:type=DiagnosticCommand",
+    "Hadoop:name=UgiMetrics,service=HBase",
+    "com.sun.management:type=HotSpotDiagnostic",
+    "java.lang:name=CMS Old Gen,type=MemoryPool"
+],
+"timestamp":1495570152,
+"status":200
+}
 ```
-
-`},`
-
-`"value":[`
-
-```
-  "jolokia:type=Config",
-
-  "JMImplementation:type=MBeanServerDelegate",
-
-  "java.lang:type=Runtime",
-
-  "Hadoop:name=MetricsSystem,service=HBase,sub=Control",
-
-  "java.lang:type=Threading",
-
-  "java.lang:type=OperatingSystem",
-
-  "Hadoop:name=MetricsSystem,service=HBase,sub=Stats",
-
-  "java.lang:name=Code Cache,type=MemoryPool",
-
-  "java.nio:name=direct,type=BufferPool",
-
-  "java.lang:type=Compilation",
-
-  "java.lang:name=CodeCacheManager,type=MemoryManager",
-
-  "java.util.logging:type=Logging",
-
-  "java.lang:type=ClassLoading",
-
-  "java.lang:name=Metaspace Manager,type=MemoryManager",
-
-  "jolokia:type=Discovery",
-
-  "java.lang:name=Metaspace,type=MemoryPool",
-
-  "java.lang:name=Par Eden Space,type=MemoryPool",
-
-  "java.lang:name=ParNew,type=GarbageCollector",
-
-  "jmx4perl:type=Config",
-
-  "java.lang:name=ConcurrentMarkSweep,type=GarbageCollector",
-
-  "Hadoop:name=JvmMetrics,service=HBase",
-
-  "jolokia:type=ServerHandler",
-
-  "java.lang:name=Compressed Class Space,type=MemoryPool",
-
-  "java.lang:type=Memory",
-
-  "java.nio:name=mapped,type=BufferPool",
-
-  "java.lang:name=Par Survivor Space,type=MemoryPool",
-
-  "Hadoop:name=REST,service=HBase",
-
-  "com.sun.management:type=DiagnosticCommand",
-
-  "Hadoop:name=UgiMetrics,service=HBase",
-
-  "com.sun.management:type=HotSpotDiagnostic",
-
-  "java.lang:name=CMS Old Gen,type=MemoryPool"
-```
-
-`],`
-
-`"timestamp":1495570152,`
-
-`"status":200`
-
-`}`
 
 The "value" field contains a list of MBean keys, which themselves each have a list of metric values.  These values can also be accessed via REST.  For example, to see all metrics available for the MBean "java.lang:type=Memory​", perform a GET on the following URL:
 
@@ -128,129 +86,37 @@ The "value" field contains a list of MBean keys, which themselves each have a li
 
 Which returns:
 
+```
 {
-
-"request": {
-
-```
-"mbean": "java.lang:type=Memory",
-
-"type": "read"
-```
-
-},
-
-"value": {
-
-```
-"ObjectPendingFinalizationCount": 0,
-
-"Verbose": true,
-
-"HeapMemoryUsage": {
-
-  "init":[2147483648](tel:%28214%29%20748-3648),
-
-  "committed":[2075918336](tel:%28207%29%20591-8336),
-
-  "max":[2075918336](tel:%28207%29%20591-8336),
-
-  "used": 1559627440
-
-},
-
-"NonHeapMemoryUsage": {
-
-  "init": 2555904,
-
-  "committed": 101498880,
-
-  "max": -1,
-
-  "used": 99462272
-
-},
-
-"ObjectName": {
-
-  "objectName": "java.lang:type=Memory"
-
+   "value" : {
+      "ObjectPendingFinalizationCount" : 0,
+      "NonHeapMemoryUsage" : {
+         "init" : 2555904,
+         "used" : 99462272,
+         "max" : -1,
+         "committed" : 101498880
+      },
+      "ObjectName" : {
+         "objectName" : "java.lang:type=Memory"
+      },
+      "HeapMemoryUsage" : {
+         "init" : 2147483648,
+         "max" : 2075918336,
+         "used" : 1559627440,
+         "committed" : 2075918336
+      },
+      "Verbose" : true
+   },
+   "status" : 200,
+   "request" : {
+      "type" : "read",
+      "mbean" : "java.lang:type=Memory"
+   },
+   "timestamp" : 1495658723
 }
 ```
 
-},
 
-"timestamp": 1495658723,
-
-"status": 200
-
-}
-
-All the metrics inside the "value" field are fair game, including the nested ones.  The next step is to configure Metricbeat to pull specific metrics from your service through Jolokia.  Metricbeat is configured to dynamically load modules from a monitored config directory.  You only need to configure your specific module \(as a YAML file\) and then place it into the config directory.  For instance, here's a module that pulls heap and garbage collection metrics from WebHBase:
-
-* module: jolokia
-
-  metricsets: \["jmx"\]
-
-  enabled: true
-
-  period: 10s
-
-  namespace: "jolokia\_metrics"
-
-  hosts: \["[hdpr03mn01.mayo.edu:12300](http://hdpr03mn01.mayo.edu:12300/)","[hdpr03mn02.mayo.edu:12300](http://hdpr03mn02.mayo.edu:12300/)"\]
-
-  path: "/jolokia/"
-
-  jmx.mappings:
-
-  * mbean: 'java.lang:name=ConcurrentMarkSweep,type=GarbageCollector'
-
-    attributes:
-
-    * attr: CollectionTime
-
-      field: gc.cms\_collection\_time
-
-* module: jolokia
-
-  * attr: CollectionCount
-
-    field: gc.cms\_collection\_count
-
-    * mbean: 'java.lang:name=ParNew,type=GarbageCollector'
-
-    attributes:
-
-  * attr: CollectionTime
-
-    field: gc.parnew\_collection\_time
-
-  * attr: CollectionCount
-
-    field: gc.parnew\_collection\_count
-
-    * mbean: 'java.lang:type=Memory'
-
-    attributes:
-
-  * attr: HeapMemoryUsage
-
-    field: memory.heap\_usage
-
-  * attr: NonHeapMemoryUsage
-
-    field: memory.non\_heap\_usage
-
-Here's some more information on the Jolokia module: [https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-module-jolokia.html](https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-module-jolokia.html)
-
-The next page shows a little more of how fields are mapped: [https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-metricset-jolokia-jmx.html](https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-metricset-jolokia-jmx.html)
-
-The first 5 lines of this module shouldn't ever change.  The hosts field is an array of hostnames \*with\* the port included.  The path field should also stay the same.  The JMX mappings are where you're able to customize which metrics you include.  The mbean field would be taked from the list of MBeans retrieved from the initial query '/jolokia/search/\*:\*/' \(such as 'java.lang:type=Memory'\).  The attr field is the title of the metric \(which, in the case of 'java.lang:type=Memory', you would retrieve from the response of '/jolokia/read/java.lang:type=Memory/\*'\).  The next line 'field' is what the field gets mapped to in Elasticsearch.
-
-After saving and dropping the YAML file into the config directory, Metricbeat should load it automatically and begin pushing data to Elasticsearch, where you can then build graphs on the underlying data in Kibana or Grafana.  In Grafana, for instance, you can add a graph, specify datasource "elasticsearch-metricbeat\*", and your metrics will be avaiable as such \(for instance, the CMS CollectionTime attribute specified above\):
-
-jolokia.jolokia\_metrics.gc.cms\_collection\_time
 
 ## ​**Addendum - Attaching Agent at Process Start**
 
