@@ -14,5 +14,9 @@
   * [Generating a Custom CA Certificate](ssl/generating-a-custom-ca-certificate.md)
   * [Generating CA-Signed Certificate](ssl/generating-ca-signed-certificate.md)
 * [Knox](knox.md)
-* [Security](security.md)
+  * [Adding a Custom Service to Knox](knox/adding-a-custom-service-to-knox.md)
+* [Dropwizard](dropwizard.md)
+  * Configuring a Scheduled Task
+* [Spark](spark.md)
+  * Persisting RDDs to Disk Between Runs
 
