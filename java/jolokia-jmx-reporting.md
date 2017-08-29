@@ -116,9 +116,7 @@ Which returns:
 }
 ```
 
-
-
-## ​**Addendum - Attaching Agent at Process Start**
+## **Attaching Agent at Process Start**
 
 It's not always convenient to attach the agent to the Java process on the fly, since restarting the process will likely change the PID and complicate the matter.  In order to deploy a Java process with the agent automatically attached, you can add the following JVM flag to your "java -jar" command:
 

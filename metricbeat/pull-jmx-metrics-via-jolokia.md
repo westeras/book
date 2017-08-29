@@ -10,7 +10,7 @@ Metricbeat can be configured to dynamically load modules from a monitored config
   enabled: true
   period: 10s
   namespace: "jolokia_metrics"
-  hosts: ["hdpr03mn01.mayo.edu:12300","hdpr03mn02.mayo.edu:12300"]
+  hosts: ["host1.westerman.demo:12300","host2.westerman.demo:12300"]
   path: "/jolokia/"
   jmx.mappings:
     - mbean: 'java.lang:name=ConcurrentMarkSweep,type=GarbageCollector'

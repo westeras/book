@@ -4,7 +4,7 @@ It can be beneficial for testing purposes to have your own custom CA for signing
 
 SSL is built on the concept of public/private keys.  At a high level, each server in a network has a private key and a certificate \(which is essentially a wrapper object containing the public key as well as some metadata\).  The private key stays private on the server it belongs to.  The certificate is freely distributed to any other server that wants to communicate securely with the respective server.  When server A requests a connection to server B, it presents a handshake that contains some data encrypted by its private key.  If server B is configured to "trust" server A's certificate, it will allow the connection.  Not only that, but the data it transfers is guaranteed to be secure since it was encrypted by server A's private key, which only server A has access to \(and only server A's certificate can successfully decrypt it\).  Finally, a given certificate can "sign" another certificate, introducing the concept of a "chain".  This is where the idea of a CA certificate comes in.  Assuming all the servers in a network "trust" the root CA certificate, then any new server introduced to the network will automatically be trusted by all others in the network, provided the new server's certificate has been signed by the CA.
 
-I will be generated a Root CA and an Intermediate CA, which is how professional CA authorities work.  The Root CA \(which is self-signed\) is only used to sign the Intermediate CA, which is then used to sign certificates, rather than signing them with the Root CA directly.  This adds an extra layer of protection to prevent a compromise of the Root CA.
+I will be generating a Root CA and an Intermediate CA, which is how professional certificate authorities work.  The Root CA \(which is self-signed\) is only used to sign the Intermediate CA, which is then used to sign certificates, rather than signing them with the Root CA directly.  This adds an extra layer of protection to prevent a compromise of the Root CA.
 
 Note: This guide assumes the default openssl configuration on a vanilla CentOS machine, so we won't be adding our own.  The only configuration required on our end is to create a couple files that act as a database that keeps track of certificate signatures by the CA.  To create the files, do the following _as root_:
 
@@ -17,7 +17,7 @@ Start in a newly created directory, which we'll use as a workspace for generatin
 
 ```
 mkdir pki && cd pki
-mkdir private certs
+mkdir private certs csr
 ```
 
 First, we'll generate the root private key:
@@ -28,7 +28,7 @@ Adding `-aes256` indicates you'd like to encrypt the key with a password. The `4
 
 Next, we'll generate the root certificate using the private key:
 
-    openssl rq \                    # the `req` command is a PKCS#10 certificate request and certificate generating utility
+    openssl req \                    # the `req` command is a PKCS#10 certificate request and certificate generating utility
     -key private/ca.key.pem \        # specifies the private key we just created
     -new \                           # signals to create a new CSR
     -x509 \                          # indicates we'll be creating a self-signed certificate rather an a CSR (more below)
@@ -71,7 +71,7 @@ First, generate the private key:
 
 `openssl genrsa -aes256 -out private/intermediate.key.pem 4096`
 
-Now we'll generate a certificate signing request \(CSR\).  A CSR encapsulates your private key, and is typically sent to a Certificate Authority to be signed and returned to you as a CA-signed certificate.  We will be generating the CSR and using our Root CA certificate to sign the certificate.
+Now we'll generate a certificate signing request \(CSR\).  A CSR uses your private key, and is typically sent to a Certificate Authority to be signed and returned to you as a CA-signed certificate.  We will be generating the CSR and using our Root CA certificate to sign the certificate.
 
 To create the CSR:
 
