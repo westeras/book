@@ -117,7 +117,17 @@ sudo openssl ca \                        # ca command is used to sign CSRs
 -cert certs/ca.cert.pem                  # CA certificate file
 ```
 
-After following the prompts you should see your new Intermediate CA certificate in the certs directory.  Notice that it is owned by root \(the previous command needs to run as root in order to access the CA database files created at the beginning\).  You'll need to log in as root and chown the file to your user:
+**Note**: It may be beneficial to add a custom extension specifically for intermediate CAs that prevents any more CAs being chained below the intermediate CA.  The extension would go in your OpenSSL configuration file \(by default, /etc/pki/tls/openssl.cnf\) and would look exactly like the v3\_ca extension, with the `pathlen:0` attribute added to prevent any more CA certificates from being signed by this certificate:
+
+```
+[ v3_intermediate_ca ]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
+basicConstraints = critical, CA:true, pathlen:0
+keyUsage = critical, digitalSignature, cRLSign, keyCertSig
+```
+
+After following the prompts you should see your new Intermediate CA certificate in the certs directory.  Notice that it is owned by root \(the previous command needs to run as root in order to access the CA database files created at the beginning\).  You'll need to log in as root and chown the file to the proper user:
 
 ```
 sudo -i
@@ -125,5 +135,5 @@ chown <user>:<group> certs/intermediate.cert.pem
 exit
 ```
 
-
+Now, you can import the Root and Intermediate CAs into your keychain, and any certificates signed by the Intermediate CA will automatically be trusted.
 
