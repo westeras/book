@@ -2,7 +2,7 @@
 
 The following describes how to generate a cerficate \(used for securing web-based services with SSL\) and sign it with a CA.  You can learn how to create your own custom CA [here](/ssl/generating-a-custom-ca-certificate.md).  This guide assumes you have followed this process and have your own root and intermediate CA certificates available for signing CSRs.
 
-A certificate/private key pair is used to enable SSL \(TLS\) communications for a web service.  Typically you can create one certificate/private key pair that can be utilized by multiple web services for SSL.
+A certificate/private key pair is used to enable SSL \(TLS\) communications for a web service.  Typically you can create one certificate/private key pair that can be utilized by multiple web services for SSL.  This example creates a certificate/private key pair specifically for use on a server.  This enables the server to run SSL-based services which will reference the key and certificate for establishing secure connections.  Client certificates can also be used for two-way SSL connections that require client authentication \(most web services do not require this as it adds some complexity\).
 
 Start by generating the private key:
 
@@ -44,5 +44,16 @@ A challenge password []:
 An optional company name []:
 ```
 
-You should have a CSR ready for signing in `csr/`.  At this point you'd typically send the CSR to a CA for signing, or in some large organization with an internal CA you may have to upload the CSR via a web interface or email the CSR to a particular team for signing.  We are going to sign our own CSR with our custom CA.
+You should have a CSR ready for signing in `csr/`.  At this point you'd typically send the CSR to a CA for signing, or in some large organization with an internal CA you may have to upload the CSR via a web interface or email the CSR to a particular team for signing.  We are going to sign our own CSR with our custom CA using the following command:
+
+    sudo openssl ca \                        # `ca` command used to sign CSRs and interact with CA database
+    -days 375 \                              # validity of certificate
+    -notext \                                # don't put the text form of the certificate in the output file
+    -md sha256 \                             # message digest
+    -in csr/hdfs.avalon.demo.csr.pem \       # input CSR
+    -out hdfs.avalon.demo.cert \             # output certificate
+    -keyfile private/intermediate.key.pem \  # intermediate CA private key
+    -cert certs/intermediate.cert.pem        # intermediate CA certificate
+
+The command needs to be run as sudo to access the CA databases that track the CA's certificate signing.  You can chown the new cert to your user afterwards.  The certificate is now ready to use.
 

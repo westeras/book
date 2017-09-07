@@ -1,1 +1,2 @@
-This file serves as an introduction to your Knowledge Base, it is displayed on the homepage of your website. Use it to provide more context to your visitors.
+This book is a compilation of short how-to guides, snippets of code I found useful at one point, problems I've experienced with their solutions, as well as anything I think might be useful for myself or anyone else solving the same problems in the future.
+
