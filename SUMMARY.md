@@ -19,4 +19,6 @@
   * [Configuring a Scheduled Task](dropwizard/configuring-a-scheduled-task.md)
 * [Spark](spark.md)
   * [Persisting RDDs to Disk Between Runs](spark/persisting-rdds-to-disk-between-runs.md)
+* [Flink](flink.md)
+  * [Reading Avro via Schema Registry in Flink](flink/reading-avro-via-schema-registry-in-flink.md)
 
