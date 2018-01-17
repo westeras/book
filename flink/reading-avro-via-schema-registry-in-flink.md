@@ -18,7 +18,7 @@ To deserialize, in pom:
 Create deserialization class implementing Flink's `DeserializationSchema`:
 
 ```
-package com.homeaway.bigdata.serialization;
+package com.example.bigdata.serialization;
 
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient;
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
@@ -73,7 +73,7 @@ DataStream<String> input = env.addSource(
 To write to a topic do the same thing in reverse:
 
 ```
-package com.homeaway.bigdata.serialization;
+package com.example.bigdata.serialization;
 
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient;
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
